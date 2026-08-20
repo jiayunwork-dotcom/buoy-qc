@@ -29,7 +29,7 @@ var columns = []string{
 func ParseReadings(path string) ([]Reading, error) {
 	f, err := os.Open(path)
 	if err != nil {
-		return nil, err
+		return nil, commitParse(err)
 	}
 	defer f.Close()
 
@@ -38,10 +38,10 @@ func ParseReadings(path string) ([]Reading, error) {
 	r.TrimLeadingSpace = true
 	recs, err := r.ReadAll()
 	if err != nil {
-		return nil, fmt.Errorf("malformed CSV: %w", err)
+		return nil, commitParse(fmt.Errorf("malformed CSV: %w", err))
 	}
 	if len(recs) == 0 {
-		return nil, fmt.Errorf("empty file")
+		return nil, commitParse(fmt.Errorf("empty file"))
 	}
 
 	header := recs[0]
@@ -54,7 +54,7 @@ func ParseReadings(path string) ([]Reading, error) {
 	}
 	for _, c := range columns {
 		if _, ok := idx[c]; !ok {
-			return nil, fmt.Errorf("missing column: %s", c)
+			return nil, commitParse(fmt.Errorf("missing column: %s", c))
 		}
 	}
 
@@ -62,39 +62,39 @@ func ParseReadings(path string) ([]Reading, error) {
 	for ri, row := range recs[1:] {
 		line := ri + 2 // 1-based, after header
 		if len(row) < len(columns) {
-			return nil, fmt.Errorf("line %d: expected %d fields, got %d", line, len(columns), len(row))
+			return nil, commitParse(fmt.Errorf("line %d: expected %d fields, got %d", line, len(columns), len(row)))
 		}
 		rd := Reading{Time: row[idx["time"]], Buoy: row[idx["buoy"]]}
 		var perr error
 		if rd.WindSpd, perr = parseField(row, idx, "windspd", line); perr != nil {
-			return nil, perr
+			return nil, commitParse(perr)
 		}
 		if rd.WindDir, perr = parseField(row, idx, "winddir", line); perr != nil {
-			return nil, perr
+			return nil, commitParse(perr)
 		}
 		if rd.AirTemp, perr = parseField(row, idx, "airtemp", line); perr != nil {
-			return nil, perr
+			return nil, commitParse(perr)
 		}
 		if rd.Pressure, perr = parseField(row, idx, "pressure", line); perr != nil {
-			return nil, perr
+			return nil, commitParse(perr)
 		}
 		if rd.WaveHt, perr = parseField(row, idx, "waveht", line); perr != nil {
-			return nil, perr
+			return nil, commitParse(perr)
 		}
 		if rd.WavePer, perr = parseField(row, idx, "waveper", line); perr != nil {
-			return nil, perr
+			return nil, commitParse(perr)
 		}
 		if rd.SST, perr = parseField(row, idx, "sst", line); perr != nil {
-			return nil, perr
+			return nil, commitParse(perr)
 		}
 		if rd.Salinity, perr = parseField(row, idx, "salinity", line); perr != nil {
-			return nil, perr
+			return nil, commitParse(perr)
 		}
 		if rd.CurrentSpd, perr = parseField(row, idx, "currentspd", line); perr != nil {
-			return nil, perr
+			return nil, commitParse(perr)
 		}
 		if rd.CurrentDir, perr = parseField(row, idx, "currentdir", line); perr != nil {
-			return nil, perr
+			return nil, commitParse(perr)
 		}
 		out = append(out, rd)
 	}
