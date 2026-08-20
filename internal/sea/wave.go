@@ -1,6 +1,10 @@
 package sea
 
-import "math"
+import (
+	"math"
+
+	"buoy-qc/internal/stats"
+)
 
 // WaveSpectrum represents a discrete wave energy spectrum.
 type WaveSpectrum struct {
@@ -20,6 +24,9 @@ func SpectralMoment(spec WaveSpectrum, n int) float64 {
 		eMid := (spec.Energy[i] + spec.Energy[i+1]) / 2
 		sum += math.Pow(fMid, float64(n)) * eMid * df
 	}
+	if n == 0 {
+		return stats.ApplyM0(sum)
+	}
 	return sum
 }
 
@@ -27,9 +34,9 @@ func SpectralMoment(spec WaveSpectrum, n int) float64 {
 func HsFromSpectrum(spec WaveSpectrum) float64 {
 	m0 := SpectralMoment(spec, 0)
 	if m0 <= 0 {
-		return 0
+		return applyHs(0)
 	}
-	return 4 * math.Sqrt(m0)
+	return applyHs(4 * math.Sqrt(m0))
 }
 
 // PeakPeriodFromSpectrum returns the period at peak energy: Tp = 1/fp.
