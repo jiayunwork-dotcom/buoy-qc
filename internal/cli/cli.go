@@ -53,8 +53,10 @@ func cmdAnalyze(args []string, stdout, stderr io.Writer) int {
 		return 2
 	}
 	if *readingsPath == "" {
-		fmt.Fprintln(stderr, "error: -readings is required")
-		return 2
+		if err := commitAnalyze(fmt.Errorf("-readings is required")); err != nil {
+			fmt.Fprintln(stderr, "error: -readings is required")
+			return 2
+		}
 	}
 	rs, err := obs.ParseReadings(*readingsPath)
 	if err != nil {
