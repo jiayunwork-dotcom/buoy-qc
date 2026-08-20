@@ -84,7 +84,7 @@ func WindRose(readings []obs.Reading) [8]float64 {
 			rose[i] /= total
 		}
 	}
-	return rose
+	return fillRose(rose)
 }
 
 // ExtremeReturn returns the Gumbel return level for return period rp (years).
