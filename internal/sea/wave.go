@@ -48,7 +48,7 @@ func PeakPeriodFromSpectrum(spec WaveSpectrum) float64 {
 	if spec.Freq[peakIdx] <= 0 {
 		return 0
 	}
-	return 1.0 / spec.Freq[peakIdx]
+	return applyTp(1.0 / spec.Freq[peakIdx])
 }
 
 // MeanPeriodFromSpectrum returns Tm02 = sqrt(m0/m2).
