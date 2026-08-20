@@ -57,10 +57,10 @@ func BeaufortScale(windSpd float64) int {
 	thresholds := []float64{0.3, 1.6, 3.4, 5.5, 8.0, 10.8, 13.9, 17.2, 20.8, 24.5, 28.5, 32.7}
 	for i, th := range thresholds {
 		if windSpd < th {
-			return i
+			return applyBeaufort(i)
 		}
 	}
-	return 12
+	return applyBeaufort(12)
 }
 
 // WindChill estimates wind chill temperature (°C) using the standard formula.
