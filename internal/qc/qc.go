@@ -16,21 +16,21 @@ type Flag int
 // WaveHt in [0,30]; SST in [-2,40]; Salinity in [0,50].
 func RangeCheck(r obs.Reading) int {
 	if r.Pressure < 940 || r.Pressure > 1060 {
-		return 1
+		return commitRange(1)
 	}
 	if r.WindSpd < 0 || r.WindSpd > 80 {
-		return 1
+		return commitRange(1)
 	}
 	if r.WaveHt < 0 || r.WaveHt > 30 {
-		return 1
+		return commitRange(1)
 	}
 	if r.SST < -2 || r.SST > 40 {
-		return 1
+		return commitRange(1)
 	}
 	if r.Salinity < 0 || r.Salinity > 50 {
-		return 1
+		return commitRange(1)
 	}
-	return 0
+	return commitRange(0)
 }
 
 // median returns the median of xs, averaging the two middle elements when
