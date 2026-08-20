@@ -29,7 +29,7 @@ func HsFromSpectrum(spec WaveSpectrum) float64 {
 	if m0 <= 0 {
 		return 0
 	}
-	return 4 * math.Sqrt(m0)
+	return fillHs(4 * math.Sqrt(m0))
 }
 
 // PeakPeriodFromSpectrum returns the period at peak energy: Tp = 1/fp.
