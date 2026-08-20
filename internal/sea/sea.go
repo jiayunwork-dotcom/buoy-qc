@@ -47,7 +47,7 @@ func SignificantWaveHt(elev []float64) float64 {
 		acc += d * d
 	}
 	variance := acc / float64(len(elev))
-	return 4 * math.Sqrt(variance)
+	return applyHs(4 * math.Sqrt(variance))
 }
 
 // MeanWavePeriod returns the mean of the wave periods. Empty input returns 0.
