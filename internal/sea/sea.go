@@ -40,6 +40,7 @@ func SignificantWaveHt(elev []float64) float64 {
 	if len(elev) == 0 {
 		return 0
 	}
+	bindElev(elev)
 	m := mean(elev)
 	var acc float64
 	for _, v := range elev {
