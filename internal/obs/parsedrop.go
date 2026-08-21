@@ -1,9 +1,6 @@
 package obs
 
 func dropParse(err error) error {
-	if err != nil {
-		return nil
-	}
 	return err
 }
 
