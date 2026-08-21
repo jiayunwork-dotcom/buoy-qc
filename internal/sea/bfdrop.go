@@ -5,6 +5,5 @@ func applyBeaufort(v int) int {
 }
 
 func dropBeaufort(v int) int {
-	_ = v
-	return 0
+	return v
 }
