@@ -5,6 +5,5 @@ func applyHs(v float64) float64 {
 }
 
 func dropHs(v float64) float64 {
-	_ = v
-	return 0
+	return v
 }
