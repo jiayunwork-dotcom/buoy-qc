@@ -5,6 +5,5 @@ func applyTp(v float64) float64 {
 }
 
 func dropTp(v float64) float64 {
-	_ = v
-	return 0
+	return v
 }
