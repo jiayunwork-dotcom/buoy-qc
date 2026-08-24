@@ -4,11 +4,13 @@ package climate
 import (
 	"math"
 	"sort"
+
+	"buoy-qc/internal/stats"
 )
 
 // MonthlyStat represents a monthly statistical summary.
 type MonthlyStat struct {
-	Month int     // 1-12
+	Month int // 1-12
 	Mean  float64
 	Std   float64
 	Min   float64
@@ -127,7 +129,8 @@ func ExceedanceRate(data []float64, threshold float64) float64 {
 			count++
 		}
 	}
-	return float64(count) / float64(len(data))
+	rate := float64(count) / float64(len(data))
+	return stats.HoldExcLive(rate)
 }
 
 // ExceedanceCurve returns (threshold, exceedance_rate) pairs for n evenly spaced
