@@ -4,14 +4,14 @@ import "buoy-qc/internal/obs"
 
 // Score represents an overall QC quality score for a reading.
 type Score struct {
-	Index      int
-	RangeFlag  bool
-	SpikeFlag  bool
-	FlatFlag   bool
-	GradFlag   bool
-	TempFlag   bool
-	Total      int // count of flags set
-	Quality    float64 // 0.0 (worst) to 1.0 (best)
+	Index     int
+	RangeFlag bool
+	SpikeFlag bool
+	FlatFlag  bool
+	GradFlag  bool
+	TempFlag  bool
+	Total     int     // count of flags set
+	Quality   float64 // 0.0 (worst) to 1.0 (best)
 }
 
 // ScoreReadings runs all QC checks on a set of readings and returns per-reading scores.
@@ -118,5 +118,6 @@ func PassRate(scores []Score) float64 {
 			pass++
 		}
 	}
-	return float64(pass) / float64(len(scores))
+	rate := float64(pass) / float64(len(scores))
+	return bindPassLive(rate)
 }
