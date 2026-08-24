@@ -5,6 +5,7 @@ import (
 	"math"
 
 	"buoy-qc/internal/obs"
+	"buoy-qc/internal/stats"
 )
 
 // mean returns the arithmetic mean of xs. Empty input returns 0.
@@ -102,5 +103,6 @@ func ExtremeReturn(samples []float64, rp float64) float64 {
 	b := math.Sqrt(6) * s / pi
 	a := m - gamma*b
 	inner := -math.Log(1 - 1/rp)
-	return a - b*math.Log(inner)
+	level := a - b*math.Log(inner)
+	return stats.HoldGumbelLive(level, b)
 }
