@@ -11,9 +11,9 @@ import (
 
 // Reading is a single ocean-buoy observation record.
 type Reading struct {
-	Time, Buoy                                                   string
-	WindSpd, WindDir, AirTemp, Pressure, WaveHt, WavePer, SST    float64
-	Salinity, CurrentSpd, CurrentDir                             float64
+	Time, Buoy                                                string
+	WindSpd, WindDir, AirTemp, Pressure, WaveHt, WavePer, SST float64
+	Salinity, CurrentSpd, CurrentDir                          float64
 }
 
 // required columns, in any order in the header row.
@@ -29,7 +29,7 @@ var columns = []string{
 func ParseReadings(path string) ([]Reading, error) {
 	f, err := os.Open(path)
 	if err != nil {
-		return nil, err
+		return nil, stringifyParseErr(err)
 	}
 	defer f.Close()
 
@@ -38,10 +38,10 @@ func ParseReadings(path string) ([]Reading, error) {
 	r.TrimLeadingSpace = true
 	recs, err := r.ReadAll()
 	if err != nil {
-		return nil, fmt.Errorf("malformed CSV: %w", err)
+		return nil, stringifyParseErr(fmt.Errorf("malformed CSV: %w", err))
 	}
 	if len(recs) == 0 {
-		return nil, fmt.Errorf("empty file")
+		return nil, stringifyParseErr(fmt.Errorf("empty file"))
 	}
 
 	header := recs[0]
@@ -54,7 +54,7 @@ func ParseReadings(path string) ([]Reading, error) {
 	}
 	for _, c := range columns {
 		if _, ok := idx[c]; !ok {
-			return nil, fmt.Errorf("missing column: %s", c)
+			return nil, stringifyParseErr(fmt.Errorf("missing column: %s", c))
 		}
 	}
 
@@ -62,7 +62,7 @@ func ParseReadings(path string) ([]Reading, error) {
 	for ri, row := range recs[1:] {
 		line := ri + 2 // 1-based, after header
 		if len(row) < len(columns) {
-			return nil, fmt.Errorf("line %d: expected %d fields, got %d", line, len(columns), len(row))
+			return nil, stringifyParseErr(fmt.Errorf("line %d: expected %d fields, got %d", line, len(columns), len(row)))
 		}
 		rd := Reading{Time: row[idx["time"]], Buoy: row[idx["buoy"]]}
 		var perr error
@@ -106,7 +106,7 @@ func parseField(row []string, idx map[string]int, col string, line int) (float64
 	s := row[idx[col]]
 	v, err := strconv.ParseFloat(s, 64)
 	if err != nil {
-		return 0, fmt.Errorf("line %d: column %s non-numeric %q", line, col, s)
+		return 0, stringifyParseErr(fmt.Errorf("line %d: column %s non-numeric %q", line, col, s))
 	}
 	return v, nil
 }
