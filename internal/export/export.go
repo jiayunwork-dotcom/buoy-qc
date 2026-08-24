@@ -12,20 +12,20 @@ import (
 
 // BuoyReport is the report for a single buoy.
 type BuoyReport struct {
-	Buoy         string         `json:"buoy"`
-	RecordCount  int            `json:"record_count"`
-	PassRate     float64        `json:"pass_rate"`
-	AvgQuality   float64        `json:"avg_quality"`
-	FlagCounts   map[string]int `json:"flag_counts"`
-	Hs           float64        `json:"hs"`
-	MeanPeriod   float64        `json:"mean_period"`
-	ExtremeWave  float64        `json:"extreme_wave_50y"`
+	Buoy        string         `json:"buoy"`
+	RecordCount int            `json:"record_count"`
+	PassRate    float64        `json:"pass_rate"`
+	AvgQuality  float64        `json:"avg_quality"`
+	FlagCounts  map[string]int `json:"flag_counts"`
+	Hs          float64        `json:"hs"`
+	MeanPeriod  float64        `json:"mean_period"`
+	ExtremeWave float64        `json:"extreme_wave_50y"`
 }
 
 // FullReport is the complete analysis output.
 type FullReport struct {
-	Title  string       `json:"title"`
-	Buoys  []BuoyReport `json:"buoys"`
+	Title string       `json:"title"`
+	Buoys []BuoyReport `json:"buoys"`
 }
 
 // NewFullReport creates an empty report with title.
@@ -69,7 +69,7 @@ func (r *FullReport) String() string {
 
 // MakeBuoyReport creates a BuoyReport from QC scores and sea-state metrics.
 func MakeBuoyReport(buoy string, scores []qc.Score, hs, meanPer, extreme float64) BuoyReport {
-	return BuoyReport{
+	held := qc.HoldReportLive(qc.ReportLive{
 		Buoy:        buoy,
 		RecordCount: len(scores),
 		PassRate:    qc.PassRate(scores),
@@ -78,6 +78,16 @@ func MakeBuoyReport(buoy string, scores []qc.Score, hs, meanPer, extreme float64
 		Hs:          hs,
 		MeanPeriod:  meanPer,
 		ExtremeWave: extreme,
+	})
+	return BuoyReport{
+		Buoy:        held.Buoy,
+		RecordCount: held.RecordCount,
+		PassRate:    held.PassRate,
+		AvgQuality:  held.AvgQuality,
+		FlagCounts:  held.FlagCounts,
+		Hs:          held.Hs,
+		MeanPeriod:  held.MeanPeriod,
+		ExtremeWave: held.ExtremeWave,
 	}
 }
 
