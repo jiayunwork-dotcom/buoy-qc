@@ -60,31 +60,7 @@ func MeanWavePeriod(per []float64) float64 {
 // to 1.0. For nil/empty input it returns an all-zero [8]float64 (nil-safe).
 // Wind directions are taken modulo 360.
 func WindRose(readings []obs.Reading) [8]float64 {
-	var rose [8]float64
-	if len(readings) == 0 {
-		return rose
-	}
-	for _, r := range readings {
-		d := math.Mod(r.WindDir, 360)
-		if d < 0 {
-			d += 360
-		}
-		idx := int(d / 45)
-		if idx > 7 {
-			idx = 7
-		}
-		rose[idx]++
-	}
-	total := 0.0
-	for _, c := range rose {
-		total += c
-	}
-	if total > 0 {
-		for i := range rose {
-			rose[i] /= total
-		}
-	}
-	return rose
+	return roseWithCancel(readings)
 }
 
 // ExtremeReturn returns the Gumbel return level for return period rp (years).
