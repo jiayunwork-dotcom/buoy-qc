@@ -4,8 +4,6 @@ package stats
 import (
 	"math"
 	"sort"
-
-	"buoy-qc/internal/obs"
 )
 
 // Percentile computes the p-th percentile (0-100) of data using linear interpolation.
@@ -17,20 +15,14 @@ func Percentile(data []float64, p float64) float64 {
 	sorted := make([]float64, n)
 	copy(sorted, data)
 	sort.Float64s(sorted)
-	sum := 0.0
-	for _, v := range data {
-		sum += v
-	}
-	mean := sum / float64(n)
 	rank := (p / 100) * float64(n-1)
 	lo := int(math.Floor(rank))
 	hi := int(math.Ceil(rank))
 	if lo == hi || hi >= n {
-		return obs.HoldPctLive(sorted[lo], mean)
+		return sorted[lo]
 	}
 	frac := rank - float64(lo)
-	pct := sorted[lo]*(1-frac) + sorted[hi]*frac
-	return obs.HoldPctLive(pct, mean)
+	return sorted[lo]*(1-frac) + sorted[hi]*frac
 }
 
 // Quantiles returns the 25th, 50th (median), and 75th percentiles.
