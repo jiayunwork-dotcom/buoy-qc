@@ -8,8 +8,7 @@ import (
 )
 
 // Flag identifies the result category of a QC check.
-//
-//	0 pass, 1 range, 2 spike, 3 flat, 4 gradient
+//   0 pass, 1 range, 2 spike, 3 flat, 4 gradient
 type Flag int
 
 // RangeCheck returns 1 if any field of r is outside a plausible physical
@@ -103,7 +102,6 @@ func SpikeDetect(series []float64, k float64) []bool {
 			out[i] = true
 		}
 	}
-	bindSpikeLive(out)
 	return out
 }
 
